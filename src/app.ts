@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { conn } from "./db/connect";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
-
+import indexRoute from "./routes/index";
 
 dotenv.config();
 
@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(cors());
 
 // routing
+app.use("/api", indexRoute);
 
 
 // error
