@@ -12,21 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sequelize = exports.conn = void 0;
-const sequelize_1 = require("sequelize");
-const config_1 = __importDefault(require("../config/config"));
-const sequelize = new sequelize_1.Sequelize(config_1.default.db.database, config_1.default.db.username, config_1.default.db.password, {
-    host: config_1.default.db.host,
-    dialect: "mysql"
-});
-exports.sequelize = sequelize;
-const conn = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield sequelize.authenticate();
-        console.log("Database connection success");
+const error_1 = __importDefault(require("../utils/error"));
+const errorHandlerMiddleware = (err, req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    if (err instanceof error_1.default) {
+        return res.status(err.statusCode || 400).json({
+            message: err.message || "İşlem Başarısız"
+        });
     }
-    catch (error) {
-        console.log(error, "Db Error!");
-    }
+    next();
+    return res.status(500).json({
+        message: "Apinizde bir hata meydana geldi lütfen kontrol ediniz!"
+    });
 });
-exports.conn = conn;
+exports.default = errorHandlerMiddleware;
